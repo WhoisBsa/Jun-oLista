@@ -1,0 +1,328 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+#include <locale.h>
+
+#define MaxTam 1000
+
+typedef struct{
+    int codigo;
+    int nome[30];
+    int endereco[30];
+    int telefone[15];
+}tipoItem;
+
+typedef struct{
+    tipoItem itens[MaxTam];
+    int inicio, fim;
+}tipoLista;
+
+void criaListaVazia(tipoLista *lista)
+{
+    lista->inicio=0;
+    lista->fim=0;
+}
+
+int vazia (tipoLista lista)
+{
+    if(lista.inicio==lista.fim){
+        return 1;
+    }
+    return 0;
+}
+
+void insere(tipoItem x, tipoLista *lista)
+{
+    if(lista->fim>MaxTam){
+        printf("lista cheia!");
+    }else{
+        lista->itens[lista->fim]=x;
+        lista->fim++;
+    }
+}
+
+void imprimeLista(tipoLista lista)
+{
+    int aux;
+    for(aux=lista.inicio; aux<=lista.fim-1; aux++){
+        printf("Codigo: %d\n", lista.itens[aux].codigo);
+        printf("Nome: %s\n", lista.itens[aux].nome);
+        printf("Endereco: %s\n",lista.itens[aux].endereco);
+        printf("Telefone: %s",lista.itens[aux].telefone);
+        printf("\n--------------------\n");
+    }
+    printf("\n");
+}
+
+int retira (int pos, tipoLista *lista)
+{
+    int aux;
+
+    if (vazia(*lista) || pos>=lista->fim){
+        return 0;
+    }
+
+    for (aux=pos; aux<lista->fim; aux++){
+        lista->itens[aux]=lista->itens[aux+1];
+    }
+
+    lista->fim--;
+    return 1;
+}
+
+int verifica(int cod, tipoLista lista)
+{
+    int aux;
+
+    for(aux=lista.inicio; aux<=lista.fim; aux++){
+        if(lista.itens[aux].codigo==cod){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int trocaPosicao(int cod1, int cod2, tipoLista *lista)
+{
+    int aux, pos1=0, pos2=0;
+
+    for(aux=lista->inicio; aux<=lista->fim; aux++){
+        if(lista->itens[aux].codigo==cod1){
+            pos1=aux;
+        }
+        if(lista->itens[aux].codigo==cod2){
+            pos2=aux;
+        }
+    }
+    if(pos1==0 &&pos2==0){
+        return 0;
+    }else{
+        tipoItem auxItem;
+        auxItem=lista->itens[pos1];
+        lista->itens[pos1]=lista->itens[pos2];
+        lista->itens[pos2]=auxItem;
+    }
+    return 1;
+}
+
+int trocaItem(int cod, tipoLista *lista)
+{
+    int aux;
+
+    for(aux=lista->inicio; aux<=lista->fim-1; aux++){
+        if(lista->itens[aux].codigo==cod){
+            printf("Informe o novo Código: ");
+            scanf("%d",&lista->itens[aux].codigo);
+            getchar();
+            printf("Informe o novo Nome: ");
+            gets(&lista->itens[aux].nome);
+            printf("Informe o novo Endereco: ");
+            gets(&lista->itens[aux].endereco);
+            printf("Informe o novo Telefone: ");
+            gets(&lista->itens[aux].telefone);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int imprimeCod(int cod, tipoLista lista)
+{
+    int aux;
+
+    for(aux=lista.inicio; aux<=lista.fim-1; aux++){
+        if(lista.itens[aux].codigo==cod){
+            printf("Codigo: %d\n", lista.itens[aux].codigo);
+            printf("Nome: %s\n", lista.itens[aux].nome);
+            printf("Endereco: %s\n",lista.itens[aux].endereco);
+            printf("Telefone: %s",lista.itens[aux].telefone);
+            printf("\n--------------------\n");
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int zeraLista(int rsp, tipoLista *lista)
+{
+    int aux;
+
+        if(rsp==1){
+            criaListaVazia(&lista);
+            return 1;
+        }
+    return 0;
+}
+
+void juntaLista(tipoLista agenda1,tipoLista agenda2,tipoLista *agenda3)
+{
+    int aux;
+
+    for(aux=agenda1.inicio; aux<=agenda1.fim; aux++){
+        agenda3->itens[aux] = agenda1.itens[aux];
+        agenda3->fim++;
+    }
+
+    for(aux=agenda1.fim; aux<agenda2.fim+agenda1.fim; aux++){
+        agenda3->itens[aux] = agenda2.itens[aux-agenda1.fim];
+        agenda3->fim++;
+    }
+}
+
+int main(){
+
+    setlocale(LC_ALL,"portuguese");
+
+    tipoLista agenda1, agenda2, agenda3;
+    tipoItem aux;
+    int op, cod, cod1, cod2, i;
+
+    criaListaVazia(&agenda1);
+    criaListaVazia(&agenda2);
+    criaListaVazia(&agenda3);
+    ///Agenda 1
+    printf("Codigo: ");
+    scanf("%d",&aux.codigo);
+    getchar();
+    printf("Nome: ");
+    gets(&aux.nome);
+    printf("Endereco: ");
+    gets(&aux.endereco);
+    printf("Telefone: ");
+    gets(&aux.telefone);
+
+    insere(aux,&agenda1);
+    printf("\nElemento inserido\n");
+    system("PAUSE");
+    system("cls");
+
+    printf("\nAgenda 1:\n\n");
+    imprimeLista(agenda1);
+    system("PAUSE");
+    system("cls");
+
+    ///Agenda 2
+    printf("Codigo: ");
+    scanf("%d",&aux.codigo);
+    getchar();
+    printf("Nome: ");
+    gets(&aux.nome);
+    printf("Endereco: ");
+    gets(&aux.endereco);
+    printf("Telefone: ");
+    gets(&aux.telefone);
+
+    insere(aux,&agenda2);
+    printf("\nElemento inserido\n\n");
+    system("PAUSE");
+    system("cls");
+
+    printf("\nAgenda 2:\n\n");
+    imprimeLista(agenda2);
+    system("PAUSE");
+    system("cls");
+
+    juntaLista(agenda1,agenda2,&agenda3);
+
+
+    printf("\nAgenda 3:\n\n");
+    imprimeLista(agenda3);
+
+
+
+
+    /*
+    do{
+        system("cls");
+        printf("Informe uma opcao:\n");
+        printf("1 - Cadastrar\n");
+        printf("2 - Imprimir Lista\n");
+        printf("3 - Excluir\n");
+        printf("4 - Pesquisar\n");
+        printf("5 - Inverter Posições\n");
+        printf("6 - Editar Item\n");
+        printf("7 - Imprimir Item\n");
+        printf("8 - Zerar Lista\n");
+        printf("0 - Sair\n");
+        scanf("%d",&op);
+        if (op == 1){
+            printf("Codigo: ");
+            scanf("%d",&aux.codigo);
+            getchar();
+            printf("Nome: ");
+            gets(&aux.nome);
+            printf("Endereco: ");
+            gets(&aux.endereco);
+            printf("Telefone: ");
+            gets(&aux.telefone);
+            //insere o elemento na lista
+            insere(aux,&agenda);
+            printf("\nElemento inserido com sucesso!\n\n");
+        }
+        if (op == 2){
+            printf("\n\nImpressao da lista\n");
+            //imprime os dados
+            imprimeLista(agenda);
+        }
+        if (op == 3){
+            printf("Informe a posicao do elemento a ser excluido:");
+            scanf("%d", &cod);
+            if (retira(cod, &agenda) == 1){
+                printf("Excluido com sucesso\n\n");
+            }else{
+                printf("Erro: Posicao Inexistente!\n\n");
+            }
+        }
+        if (op == 4)
+        {
+            printf("Qual o código: ");
+            scanf("%i", &cod);
+            if(pesquisa(cod, agenda) == 1)
+                printf("Existe na lista!\n\n");
+            else
+                printf("Não existe!\n\n");
+        }
+        if (op == 5)
+        {
+            int posA, posB;
+            printf("Qual o código A: ");
+            scanf("%i", &codA);
+            printf("Qual o código B: ");
+            scanf("%i", &codB);
+            if(pesquisa(codA, agenda) == 1 && pesquisa(codB, agenda) == 1)
+            {
+                printf("os dois Existe na lista!\n\n");
+            }
+            else
+                printf("um dos dois Não existe!\n\n");
+        }
+         if(op == 6)
+        {
+            printf("Código para editar dados: ");
+            scanf("%i", &cod);
+            if(editar(cod, &agenda) == 1)
+                printf("Alterado com sucesso!\n\n");
+            else
+                printf("Item não encontrado!\n\n");
+        }
+        if (op == 7)
+        {
+            printf("\n\nQual o Código?\n");
+            scanf("%i", &cod);
+            //imprime os dados
+            if(imprimeItem(agenda,cod))
+                printf("\n");
+            else
+                printf("Item não encontrado!\n");
+        }
+        if (op == 8)
+        {
+            criaListaVazia(&agenda);
+            printf("Lista Limpa!\n");
+        }
+        system("PAUSE");
+    }while(op > 0);
+*/
+
+    return 0;
+}
