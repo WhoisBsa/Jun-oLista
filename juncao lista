@@ -315,10 +315,13 @@ int main(){
             else
                 printf("Item não encontrado!\n");
         }
-        if (op == 8)
-        {
-            criaListaVazia(&agenda);
-            printf("Lista Limpa!\n");
+        if(op==8){
+            int rsp;
+            printf("Tem certeza? 1 para sim, 0 para voltar: ");
+            scanf("%d", &rsp);
+            if(zeraLista(rsp,&agenda)==1){
+                printf("Lista vazia\n");
+            }
         }
         system("PAUSE");
     }while(op > 0);
